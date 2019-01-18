@@ -1,0 +1,12 @@
+{% extends "blog/base.html" %}
+
+
+<div>
+{% block content %}<!--this give the signal what to over-ride-->
+	{% for variable in key1%}
+		    <h2><a class="article-title" href={{variable.link}}>{{ variable.title }}</a></h2>
+		    <p class="article-content"><i>{{ variable.content }}</i></p>
+
+	{% endfor %}
+</div>
+{% endblock content %}
