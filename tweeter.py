@@ -3,6 +3,8 @@ from tkinter import *
 import nltk
 from nltk.tokenize import sent_tokenize
 from nltk.tokenize import word_tokenize
+import matplotlib.pyplot as plt
+
 
 API_key = "bSh5wvnGDnoE0HShQjbLcDCj5"
 API_secret_key = "mwyr7FEk1z54uqhqxRSnHCoEM9QgdNVfEPNofH6gU3VwIbgfcs"
@@ -56,7 +58,20 @@ def DataProjector():
     text = nltk.Text(word_token)
     
     frequency_distribution = nltk.FreqDist(text)
-    print (frequency_distribution.most_common(5))
+    Plot = frequency_distribution.most_common(10)
+    
+    names = []
+    values = []
+    
+    for i in Plot:
+        names.append(i[0])
+        values.append(i[1])
+    print(names)
+    print(values)
+    fig, axs = plt.subplots()
+    axs.plot(names, values)
+    fig.suptitle('Top 10')
+    plt.show()
     print (frequency_distribution.plot())
 
 submit = Button(root, text ="Submit", command = DataProjector)
