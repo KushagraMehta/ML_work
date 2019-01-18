@@ -1,40 +1,70 @@
 import tweepy
-#import tweepy.Cursor as tweetFind
+from tkinter import *
+import nltk
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize
 
 API_key = "bSh5wvnGDnoE0HShQjbLcDCj5"
-
 API_secret_key = "mwyr7FEk1z54uqhqxRSnHCoEM9QgdNVfEPNofH6gU3VwIbgfcs"
-
 Access_token = "2953318536-Pm32gN5okawo4lcZlzpIIxfzvRpAuPWIZcbP9lT"
-
 Access_token_secret = "BYzfYILbGoVrCfPt2exw4JBLnDBP8eKWDETOftiO285Ff" 
+
 auth = tweepy.OAuthHandler(API_key,API_secret_key)
 auth.set_access_token(Access_token,Access_token_secret)
 
 api = tweepy.API(auth)
-data = input("Enter the Keyword: ")
-search = tweepy.Cursor(api.search, q=data,result_type="recent", lang="en").items(5)
-count = 1
-for item in search:
-	print("Tweet "+str(count))
-	count = count+1
-	print("Tweet text: "+item.text)
-	print (item.created_at)
 
-	print ("Retweet: "+str(item.retweet_count))
+# GUI PART
+root = Tk()
 
-	# print the username who published the tweet
-	print ("Username: "+item.user.name)
+label1 = Label(root, text="Search")
+E1 = Entry(root, bd =5)
 
-	# print the location of the user who published the tweet
-	print ("Location: "+item.user.location)
+label2 = Label(root, text="Sample Size")
+E2 = Entry(root, bd =5)
 
-	# print the language code of the tweet
-	print (item.metadata['iso_language_code'])
+def getE1():
+    return E1.get()
+def getE2():
+    return E2.get()
 
-	# print the search result type
-	print (item.metadata['result_type'])
 
-	# print the device/source from which the tweet has been published
-	# e.g. Twitter for Android, Twitter for iPhone, Twitter Web Client, etc.
-	print ("Device: "+item.source+"\n\n\n\n\n")
+
+def DataProjector():
+
+    getE1()
+    keyword = getE1()
+
+    getE2()
+    numberOfTweets = getE2()
+    numberOfTweets = int(numberOfTweets)
+
+    Tweet_Data=""
+    for tweet in tweepy.Cursor(api.search, q=keyword,result_type="recent", lang="en").items(numberOfTweets):
+        Tweet_Data = Tweet_Data + tweet.text
+    
+    F = open("Tweet_Data_file.txt","a")
+    F.write(Tweet_Data)
+    F.close()
+    sent_token = sent_tokenize(Tweet_Data)
+    word_token = word_tokenize(Tweet_Data)
+
+    """print(sent_token)
+                print('___________________@@@@@@@@@@@@@@@@@@@@@@@@@@@@_________________')
+                print(word_token)
+            """
+    text = nltk.Text(word_token)
+    
+    frequency_distribution = nltk.FreqDist(text)
+    print (frequency_distribution.most_common(5))
+    print (frequency_distribution.plot())
+
+submit = Button(root, text ="Submit", command = DataProjector)
+
+label1.pack()
+E1.pack()
+label2.pack()
+E2.pack()
+submit.pack(side =BOTTOM)
+
+root.mainloop()
